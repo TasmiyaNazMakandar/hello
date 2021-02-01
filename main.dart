@@ -1,8 +1,5 @@
-
-
-import 'package:bimwprovider/model/model.dart';
 import 'package:flutter/material.dart';
-
+import 'package:newprovider/model/mymodel.dart';
 import 'package:provider/provider.dart';
 
 
@@ -15,7 +12,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: CalculateBmi())
+        ChangeNotifierProvider.value(
+          value: Counter(),
+        ),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -23,82 +22,67 @@ class MyApp extends StatelessWidget {
 
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: MyHomePage(),
+        home: MyHomePage(title: ""),
       ),
     );
   }
 }
 
 class MyHomePage extends StatelessWidget {
+  final String title;
 
- var hcon= TextEditingController();
- var wcon=TextEditingController();
+  MyHomePage({this.title});
 
- void Bmi(BuildContext context)
- {
-   var height1=double.parse(hcon.text);
-   var weight1=double.parse(wcon.text);
-   Provider.of<CalculateBmi>(context, listen: false). cal(height1,weight1);
- }
+  void _incrementCounter(BuildContext context) {
+    Provider.of<Counter>(context, listen: false).incrementCounter();
+  }
+  void _decrementcounter(BuildContext context){
+    Provider.of<Counter>(context, listen: false). decrementConter();
+  }
 
   @override
   Widget build(BuildContext context) {
+    var counter = Provider
+        .of<Counter>(context)
+        .getCounter;
 
-
-    var result = Provider
-        .of<CalculateBmi>(context).getres;
     return Scaffold(
       appBar: AppBar(
-        title: Text('BMI Calculator',style: TextStyle(
-          color: Colors.black
-        ),),
-        backgroundColor: Colors.greenAccent,
+        title: Text(title),
+        backgroundColor: Colors.orange,
       ),
-      body:Center(
-
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children:<Widget> [
-            Padding(padding: const EdgeInsets.all(10),
-              child:TextField(
-                controller: hcon,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: 'Enter height',
-                  icon: Icon(Icons.height_rounded),
-                ),
-              ),
-
-            ),
-
-            Padding(padding:const EdgeInsets.all(10),
-            child:TextField(
-              controller: wcon,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: 'Enter weight',
-                icon: Icon(Icons.line_weight_rounded),
-              ),
-            ),
-
-            ),
-           Padding(padding: const EdgeInsets.all(10),
-           child:  RaisedButton(onPressed: (){ Bmi(context); },color: Colors.greenAccent,
-             child: Text('click'),),),
+          children: <Widget>[
             Text(
-                ' Result : $result',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold
-                )
+              '$counter',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 40,
+                fontWeight: FontWeight.bold
+              )
+            ),
+            RaisedButton(onPressed: (){_incrementCounter(context);},child: Text('Add',style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 28,
+              color: Colors.white
+            ),
+            ),
+              color: Colors.orange,
+            ),
+            RaisedButton(onPressed: (){ _decrementcounter(context);},child: Text('Substract',style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 28,
+                color: Colors.white
             ),
 
+            ),
+              color: Colors.orange,
+            ),
           ],
         ),
-      ) ,
-
-
+      ),
     );
   }
 }
